@@ -1,35 +1,63 @@
-import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import React, { useRef, useState } from "react";
+import { imageUrl, searchUrl } from "src/utils/requestUrl";
 
 const Main = () => {
   const [serachResults, setSerachResults] = useState([]);
-
-  const baseURL = "https://api.themoviedb.org";
-  const fetchApi = async (text) => {
-    const res = await fetch(
-      `${baseURL}/3/search/multi?api_key=baa7af1f304682eb49bcbb6db49c1579&language=en-US&query=${text}&page=1&include_adult=false`,
-      { mode: "cors" }
-    );
-    const resJson = await res.json();
-    const results = resJson.results;
-    setSerachResults(results);
-  };
-
   const inputRef = useRef(null);
 
-  const handleClick = () => {
+  const searchMedia = async (text) => {
+    const res = await fetch(searchUrl(text), { mode: "cors" });
+    const resJson = await res.json();
+    const medias = resJson.results;
+    const filterExculdePerson = medias.filter(
+      (data) => data.media_type !== "person"
+    );
+    console.log(medias);
+    setSerachResults(filterExculdePerson);
+  };
+
+  const handleClickSearch = () => {
     const text = inputRef.current.value;
-    fetchApi(text);
+    searchMedia(text);
   };
 
   return (
-    <div>
-      <input className="border" type="text" ref={inputRef} />
-      <button onClick={handleClick}>検索</button>
-      <ul>
+    <div className="h-full w-full flex flex-col  items-center">
+      <div className="flex my-3">
+        <input className="block border" type="text" ref={inputRef} />
+        <button className="block border" onClick={handleClickSearch}>
+          検索
+        </button>
+      </div>
+
+      <ul className="flex flex-wrap gap-5 justify-center">
         {serachResults.map((result) => (
-          <li key={result.id}>
-            <p>{result.media_type}</p>
-            <p>{result.title}</p>
+          <li className=" w-80 h-96 rounded-md shadow-md" key={result.id}>
+            <Link
+              href={{
+                pathname: `/media/${result.id}`,
+                query: { media: result.media_type },
+              }}
+            >
+              <a href="a">
+                <Image
+                  className="rounded-t-md"
+                  src={`${imageUrl}${result.poster_path}`}
+                  alt="image"
+                  layout="responsive"
+                  width={300}
+                  height={300}
+                />
+                <div className="flex justify-between">
+                  <p className="text-xl font-bold">
+                    {result.media_type === "tv" ? result.name : result.title}
+                  </p>
+                  <p>{result.media_type}</p>
+                </div>
+              </a>
+            </Link>
           </li>
         ))}
       </ul>
