@@ -1,15 +1,14 @@
 import React from "react";
 import Header from "src/components/Header";
-import { Media } from "src/components/Media";
+import SignUpForm from "src/components/SignUpForm";
 
-const mediaId = () => {
+const SignUp = () => {
   return (
     <div className="h-screen w-screen bg-gray-50">
       <Header />
-
-      <Media />
+      <SignUpForm />
     </div>
   );
 };
 
-export default mediaId;
+export default SignUp;

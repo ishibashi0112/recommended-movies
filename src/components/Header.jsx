@@ -1,3 +1,4 @@
+import { UserButton } from "@clerk/nextjs";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -5,17 +6,27 @@ const Header = () => {
   const router = useRouter();
 
   const handleClickTitle = () => {
-    router.push("/");
+    router.push("/main");
   };
+
+  if (router.pathname === "/signUp") {
+    return (
+      <header className="h-12 bg-gray-100  text-center font-bold text-2xl leading-[48px] ">
+        Recomend Movie
+      </header>
+    );
+  }
+
   return (
-    <header className="h-12 flex-1 bg-gray-100">
+    <header className="flex justify-between items-center h-12 bg-gray-100 ">
       <button
-        aria
         className="h-full leading-[48px] font-bold text-2xl"
         onClick={handleClickTitle}
       >
-        Movie Share
+        Recomend Movie
       </button>
+
+      <UserButton afterSignOutAllUrl="/" />
     </header>
   );
 };

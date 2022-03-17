@@ -9,9 +9,8 @@ export const Media = () => {
   const mediaId = router.query.id;
   const mediaType = router.query.media;
   const mediaWatchProviders = media
-    ? media["watch/providers"].results.JP.flatrate
+    ? media["watch/providers"].results.JP?.flatrate
     : null;
-  console.log(mediaWatchProviders);
 
   const getMedia = async () => {
     if (mediaId && mediaType) {
@@ -64,9 +63,14 @@ export const Media = () => {
                 })
               : null}
           </ul>
+
           <div className="w-24">
-            <p className=" text-base text-gray-100 ">配信中</p>
-            <p className=" text-base text-gray-100 font-bold">今すぐ見る</p>
+            <p className=" text-base text-gray-100 ">
+              {mediaWatchProviders ? "配信中" : "配信無し"}
+            </p>
+            <p className=" text-base text-gray-100 font-bold">
+              {mediaWatchProviders ? "今すぐ見る" : ""}
+            </p>
           </div>
         </div>
         <div className="ml-2 truncate">
@@ -107,7 +111,7 @@ export const Media = () => {
         <div className="mt-3 ">
           <h1 className="text-xl font-bold">ディスコグラフィ</h1>
           <ul className="flex overflow-scroll">
-            {media
+            {media?.seasons
               ? media.seasons.map((season) => (
                   <li className="mr-2" key={season.id}>
                     <Image
