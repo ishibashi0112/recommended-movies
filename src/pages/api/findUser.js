@@ -1,13 +1,16 @@
 import { prisma } from "src/utils/prismaClient";
 
 export default async (req, res) => {
-  console.log(req.method);
-
+  const { email } = req.query;
   const user = await prisma.user.findUnique({
     where: {
-      email: "yuki.ishibashi0112@gmail.com",
+      email: email,
     },
   });
-  console.log(user);
-  res.status(200).json(user);
+
+  if (user) {
+    res.status(200).json(user);
+  } else {
+    res.status(500).json(user);
+  }
 };
