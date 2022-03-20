@@ -27,9 +27,9 @@ export const SerachResults = (props) => {
       </div>
     );
   }
-  console.log(data);
+
   if (error) {
-    return <div className="mt-10 text-xl">{error.messege}</div>;
+    return <div className="mt-10 text-xl">{error.message}</div>;
   }
 
   if (data && filterExculdePerson.length === 0) {
