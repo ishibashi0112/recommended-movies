@@ -54,7 +54,6 @@ export const SerachResults = (props) => {
               page={activePage}
               onChange={handleOnChangePage}
               total={data.total_pages}
-              color="dark"
             />
           )}
         </div>
@@ -63,7 +62,10 @@ export const SerachResults = (props) => {
       <ul className="flex flex-wrap gap-5 justify-center mt-4 ">
         {filterExculdePerson
           ? filterExculdePerson.map((result) => (
-              <li className=" w-80 h-96 rounded-md shadow-md" key={result.id}>
+              <li
+                className=" w-80 h-[26rem] roundedmd shadow-md"
+                key={result.id}
+              >
                 <Link
                   href={{
                     pathname: `/media/${result.id}`,
@@ -73,20 +75,22 @@ export const SerachResults = (props) => {
                   <a href="a">
                     <Image
                       className="rounded-t-md"
-                      src={`${imageUrl}${result.poster_path}`}
+                      src={
+                        result.poster_path
+                          ? `${imageUrl}${result.poster_path}`
+                          : "/images/noImage.png"
+                      }
                       alt="image"
                       layout="responsive"
-                      width={300}
-                      height={300}
+                      width={200}
+                      height={200}
                     />
-                    <div className="flex justify-between">
-                      <p className="text-xl font-bold">
-                        {result.media_type === "tv"
-                          ? result.name
-                          : result.title}
-                      </p>
-                      <p>{result.media_type}</p>
-                    </div>
+
+                    <p className="w-full h-14 text-xl font-bold text-ellipsis overflow-hidden">
+                      {result.media_type === "tv"
+                        ? `(TV)　${result.name}`
+                        : `(映画)　${result.title}`}
+                    </p>
                   </a>
                 </Link>
               </li>

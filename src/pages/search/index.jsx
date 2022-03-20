@@ -4,7 +4,7 @@ import Header from "src/components/Header";
 
 const Search = () => {
   return (
-    <div className="h-screen w-screen bg-gray-50">
+    <div className="h-screen w-screen ">
       <Header />
       <SearchComponent />
     </div>
