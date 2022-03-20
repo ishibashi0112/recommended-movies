@@ -1,37 +1,41 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { fetcher } from "src/utils/fetcher";
 import { getMovieUrl, getTvUrl, imageUrl } from "src/utils/requestUrl";
+import useSWR from "swr";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 export const Media = () => {
-  const [media, setMedia] = useState();
   const router = useRouter();
   const mediaId = router.query.id;
   const mediaType = router.query.media;
+
+  const { data: media, error } = useSWR(
+    mediaType === "tv" ? getTvUrl(mediaId) : getMovieUrl(mediaId),
+    fetcher
+  );
+
   const watchProviders = media
     ? media["watch/providers"].results.JP?.flatrate
     : null;
 
-  const getMedia = async () => {
-    if (mediaId && mediaType) {
-      const res = await fetch(
-        mediaType === "tv" ? getTvUrl(mediaId) : getMovieUrl(mediaId),
-        { mode: "cors" }
-      );
-      const results = await res.json();
-      console.log(results);
+  if (!error && !media) {
+    return (
+      <div className="flex justify-center items-center text-xl mt-10">
+        <AiOutlineLoading3Quarters className="animate-spin mr-1" />
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
-      setMedia(results);
-    }
-  };
+  if (error) {
+    return <div className="mt-10 text-xl">{error.message}</div>;
+  }
 
-  useEffect(() => {
-    getMedia();
-  }, [mediaId]);
-
-  const netflixUrl = `https://www.netflix.com/search?q=${
-    mediaType === "tv" ? media?.name : media?.title
-  }`;
+  // const netflixUrl = `https://www.netflix.com/search?q=${
+  //   mediaType === "tv" ? media.name : media.title
+  // }`;
 
   return (
     <div className="h-full w-full flex ">
@@ -39,7 +43,7 @@ export const Media = () => {
         <Image
           className="rounded-t-md"
           src={
-            media?.poster_path
+            media.poster_path
               ? `${imageUrl}${media?.poster_path}`
               : "/images/noImage.png"
           }
@@ -78,23 +82,23 @@ export const Media = () => {
           </div>
         </div>
         <div className="ml-2 truncate">
-          {media ? (
+          {media && (
             <a
               className="text-gray-100 "
               href={media?.homepage}
               target="_blank"
               rel="noopener noreferrer"
             >{`HP : ${media?.homepage}`}</a>
-          ) : null}
+          )}
         </div>
       </div>
 
       <div className="flex flex-col m-3 max-w-3xl">
         <div className="flex text-3xl  ">
           <p className="font-bold ">
-            {mediaType === "tv" ? media?.name : media?.title}
+            {mediaType === "tv" ? media.name : media.title}
           </p>
-          <p className="">{`(${media?.first_air_date})`}</p>
+          <p>{media.first_air_date && `(${media.first_air_date})`}</p>
         </div>
         <div className="flex">
           <p>{mediaType === "tv" ? "TV" : "MOVIE"}</p>
@@ -110,29 +114,28 @@ export const Media = () => {
         </div>
         <div className="mt-3 pr-3">
           <h1 className="text-xl font-bold">概要</h1>
-          <p>{media?.overview}</p>
+          <p>{media.overview}</p>
         </div>
         <div className="mt-3 ">
           <h1 className="text-xl font-bold">ディスコグラフィ</h1>
           <ul className="flex overflow-scroll">
-            {media?.seasons
-              ? media.seasons.map((season) => (
-                  <li className="mr-2" key={season.id}>
-                    <Image
-                      src={
-                        season.poster_path
-                          ? `${imageUrl}${season.poster_path}`
-                          : "/images/noImage.png"
-                      }
-                      alt="image"
-                      layout="fixed"
-                      width={200}
-                      height={200}
-                    />
-                    <p>{`${season.name}：${season.episode_count}話`}</p>
-                  </li>
-                ))
-              : null}
+            {media.seasons &&
+              media.seasons.map((season) => (
+                <li className="mr-2" key={season.id}>
+                  <Image
+                    src={
+                      season.poster_path
+                        ? `${imageUrl}${season.poster_path}`
+                        : "/images/noImage.png"
+                    }
+                    alt="image"
+                    layout="fixed"
+                    width={200}
+                    height={200}
+                  />
+                  <p>{`${season.name}：${season.episode_count}話`}</p>
+                </li>
+              ))}
           </ul>
         </div>
       </div>
