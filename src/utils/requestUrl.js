@@ -2,8 +2,8 @@ const baseURL = "https://api.themoviedb.org";
 
 export const imageUrl = "https://image.tmdb.org/t/p/w500";
 
-export const searchUrl = (text) => {
-  return `${baseURL}/3/search/multi?api_key=${process.env.TMDB_API_KEY}&language=ja&query=${text}&page=1&include_adult=true`;
+export const searchUrl = (text, page) => {
+  return `${baseURL}/3/search/multi?api_key=${process.env.TMDB_API_KEY}&language=ja&query=${text}&page=${page}&include_adult=true`;
 };
 
 export const getMovieUrl = (id) => {
