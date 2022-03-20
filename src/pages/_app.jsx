@@ -26,7 +26,7 @@ const MyApp = ({ Component, pageProps }) => {
           <>
             <SignedIn>
               <ClerkLoaded>
-                <Component {...pageProps} />;
+                <Component {...pageProps} />
               </ClerkLoaded>
             </SignedIn>
             <SignedOut>

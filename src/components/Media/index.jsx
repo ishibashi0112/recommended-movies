@@ -8,7 +8,7 @@ export const Media = () => {
   const router = useRouter();
   const mediaId = router.query.id;
   const mediaType = router.query.media;
-  const mediaWatchProviders = media
+  const watchProviders = media
     ? media["watch/providers"].results.JP?.flatrate
     : null;
 
@@ -38,7 +38,11 @@ export const Media = () => {
       <div className="min-w-[20rem] w-80 m-3 rounded-md bg-slate-600 ">
         <Image
           className="rounded-t-md"
-          src={`${imageUrl}${media?.poster_path}`}
+          src={
+            media?.poster_path
+              ? `${imageUrl}${media?.poster_path}`
+              : "/images/noImage.png"
+          }
           alt="image"
           layout="responsive"
           width={300}
@@ -46,8 +50,8 @@ export const Media = () => {
         />
         <div className="flex justify-center items-center mt-3">
           <ul className="flex flex-wrap mr-4">
-            {mediaWatchProviders
-              ? mediaWatchProviders.map((provider) => {
+            {watchProviders
+              ? watchProviders.map((provider) => {
                   return (
                     <li className="mr-2" key={provider.provider_id}>
                       <Image
@@ -66,10 +70,10 @@ export const Media = () => {
 
           <div className="w-24">
             <p className=" text-base text-gray-100 ">
-              {mediaWatchProviders ? "配信中" : "配信無し"}
+              {watchProviders ? "配信中" : "配信無し"}
             </p>
             <p className=" text-base text-gray-100 font-bold">
-              {mediaWatchProviders ? "今すぐ見る" : ""}
+              {watchProviders ? "今すぐ見る" : ""}
             </p>
           </div>
         </div>
@@ -115,7 +119,11 @@ export const Media = () => {
               ? media.seasons.map((season) => (
                   <li className="mr-2" key={season.id}>
                     <Image
-                      src={`${imageUrl}${season.poster_path}`}
+                      src={
+                        season.poster_path
+                          ? `${imageUrl}${season.poster_path}`
+                          : "/images/noImage.png"
+                      }
                       alt="image"
                       layout="fixed"
                       width={200}

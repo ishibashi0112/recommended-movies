@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import Head from "next/head";
 import Header from "src/components/Header";
 import { useUser } from "@clerk/nextjs";
 import { useSnapshot } from "valtio";
